@@ -60,13 +60,14 @@ class SearchInfoBot:
 
     def _summary_method(self, message):
         self._remove_chat_button()
-        if self._get_summary(message.text):
-            button_link = InlineKeyboardButton(text='Link to article in wikipedia', url=self._get_url(message.text))
+        query_text = ' '.join([w.capitalize() for w in message.text.split(' ')])
+        if self._get_summary(query_text):
+            button_link = InlineKeyboardButton(text='Link to article in wikipedia', url=self._get_url(query_text))
             self._kb.add(button_link)
-            self._bot.send_message(message.chat.id, self._get_summary(message.text), reply_markup=self._kb)
+            self._bot.send_message(message.chat.id, self._get_summary(query_text), reply_markup=self._kb)
         else:
             self._bot.send_message(message.chat.id, 'No results')
-        self._save_query(message.chat.id, message.text)
+        self._save_query(message.chat.id, query_text)
 
 
 if __name__ == '__main__':
